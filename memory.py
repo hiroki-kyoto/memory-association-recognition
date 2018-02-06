@@ -29,13 +29,15 @@ class SparseMatrix(object):
     is the coordination of this element in matrix.
     '''
 
-    def __init__(self, elements=None, coords=None):
+    def __init__(self, elements=None, coords=None, dims=None):
         if elements!=None:
             assert type(elements)==np.ndarray
             self.elements = elements.astype(np.float32)
         if coords!=None:
             assert type(coords)==np.ndarray
             self.coords = coords.astype(np.int32)
+        if dims!=None:
+            self.dims = dims
 
     def __from_dense_matrix__(self, dense_matrix):
         '''dense_matrix required to be a numpy array'''
@@ -50,6 +52,7 @@ class SparseMatrix(object):
                     self.coords.append(i)
             self.elements = np.array(self.elements)
             self.coords = np.array(self.coords)
+            self.dims = dense_matrix.shape
         elif len(dense_matrix.shape)==2:
             for i in range(dense_matrix.shape[0]):
                 for j in range(dense_matrix.shape[1]):
@@ -58,6 +61,7 @@ class SparseMatrix(object):
                         self.coords.append([i,j])
             self.elements = np.array(self.elements)
             self.coords = np.array(self.coords)
+            self.dims = dense_matrix.shape
         elif len(dense_matrix.shape)==3:
             for i in range(dense_matrix.shape[0]):
                 for j in range(dense_matrix.shape[1]):
@@ -67,12 +71,16 @@ class SparseMatrix(object):
                             self.coords.append([i,j,k])
             self.elements = np.array(self.elements)
             self.coords = np.array(self.coords)
+            self.dims = dense_matrix.shape
         else:
             raise ValueError("Matrix to convert is not supported!")
 
     def __multiply__(self, sparse_matrix):
         assert type(sparse_matrix)==SparseMatrix
-        assert type(111111) ####
+        if len(sparse_matrix.dims)==1:
+            if sparse_matrix.dims[0]==1:
+                self.elements *= sparse_matrix.elements[0]
+        elif ...
 
 def conv(x, w):
     '''Conv: A plain convolution operation
